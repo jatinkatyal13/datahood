@@ -2,6 +2,8 @@
 
 {% block content %}
 
+{% load static %}
+
 <body>
 
 	<script type="text/javascript">
@@ -33,6 +35,7 @@
 									</div>
 									<div class="card-action">
 										<button onclick="this.classList.remove('grey'); this.classList.add('green');" class="btn grey lighten-1 waves-light waves-effect">Like</button>
+										<a href="visualize/` + element.id + `" target="_blank" class="btn waves-light waves-effect">Visualize</a>
 									</div>
 								</div>
 							</div>

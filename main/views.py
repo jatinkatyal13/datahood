@@ -25,6 +25,7 @@ def get_recent_data_sets(request, page):
 	for x in data:
 		temp = dict()
 
+		temp['id'] = x.id
 		temp['name'] = User.objects.get(id = x.user.id).first_name
 		temp['title'] = x.title
 		temp['description'] = x.description
@@ -36,6 +37,22 @@ def get_recent_data_sets(request, page):
 	# 	x['fields']['name'] = User.objects.get(id = x['fields']['id']).first_name
 
 	return HttpResponse(json.dumps(res))
+
+@login_required
+def visualize(request, dataSet):
+
+	dataSet = get_object_or_404(DataSet, id = dataSet)
+
+	csv_data = ""
+	with open(dataSet.file.name, "r") as file:
+		for line in file:
+			csv_data += line
+
+	params = {
+		'csv_data' : csv_data
+	}
+
+	return render(request, 'main/visualize.html', params)	
 
 # views
 @login_required
