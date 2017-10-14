@@ -2,9 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from .models import DataSet
 from .forms import LoginForm, AddDataSetForm
 from django.core import serializers
+import json
 
 # Create your views here.
 
@@ -16,22 +18,40 @@ def get_recent_data_sets(request, page):
 
 	page = int(page)
 
-	data = DataSet.objects.all()[page*MAX_ON_PAGE:page*MAX_ON_PAGE + MAX_ON_PAGE]
+	data = DataSet.objects.all().order_by('-publishing_date')[page*MAX_ON_PAGE:page*MAX_ON_PAGE + MAX_ON_PAGE]
 
-	return HttpResponse(serializers.serialize("json", data))
+	res = list()
+
+	for x in data:
+		temp = dict()
+
+		temp['name'] = User.objects.get(id = x.user.id).first_name
+		temp['title'] = x.title
+		temp['description'] = x.description
+		temp['file'] = x.file.name
+
+		res.append(temp)
+
+	# for x in data:
+	# 	x['fields']['name'] = User.objects.get(id = x['fields']['id']).first_name
+
+	return HttpResponse(json.dumps(res))
 
 # views
 @login_required
 def index(request):
 
-	request.POST = request.POST.copy()
-
-	request.POST['user'] = request.user.id
-
 	if request.method == "POST":
-		form = AddDataSetForm(request.POST)
+		form = AddDataSetForm(request.POST, request.FILES)
 		if form.is_valid():
 			form.save()
+			dataSet = DataSet(
+				user = User.objects.get(id = request.user.id),
+				title = form.cleaned_data['title'],
+				description = form.cleaned_data['description'],
+				file = request.FILES['file']
+			)
+			dataSet.save()
 	else:
 		form = AddDataSetForm()
 
