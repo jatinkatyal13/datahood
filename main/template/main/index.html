@@ -3,6 +3,56 @@
 {% block content %}
 
 <body>
+
+	<script type="text/javascript">
+		
+		var page = 0;
+
+		function loadData(){
+			$.post(
+				'get_datasets/'+page,
+				{
+					'csrfmiddlewaretoken' : '{{ csrf_token }}'
+				},
+				function (data, status) {
+					page++;
+					var posts = $("#posts");
+					data.forEach(function(element){
+						posts.append(`
+							<div class="col s12 m8 offset-m2">
+								<div class="card grey lighten-4">
+									<div class="card-content">
+										<span class="card-title"><i class="material-icons">account_circle</i>` + element.fields.user + `</span>
+										<h5>` + element.fields.title + `</h5>
+										<p>
+											` + element.fields.description + `
+										</p>
+										<p>
+											<a href="` + element.fields.file + `">Data Set File</a>
+										</p>
+									</div>
+									<div class="card-action">
+										<button onclick="this.classList.remove('grey'); this.classList.add('green');" class="btn grey lighten-1 waves-light waves-effect">Like</button>
+									</div>
+								</div>
+							</div>
+						`);
+					});
+				},
+				"json"
+			);
+		}
+
+		$(document).ready(function(){
+			loadData();
+			$(window).scroll(function() {
+				if($(window).scrollTop() == $(document).height() - $(window).height()) {
+					loadData();
+				}
+			});
+		});
+
+	</script>
 	
 	{% include 'main/navbar.html' %}
 
@@ -13,6 +63,18 @@
 					<h4>Home</h4>
 				</blockquote>
 			</div>
+			<div class="col s12 m6">
+				<center>
+					<a href="#addModal">
+						<div class="chip">
+							Add 
+							<i class="material-icons">add</i></a>
+						</div>
+					</a>
+				</center>
+			</div>
+		</div>
+		<div class="row" id="posts">
 		</div>
 	</div>
 

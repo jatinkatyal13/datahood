@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from .models import DataSet
-from .forms import LoginForm
+from .forms import LoginForm, AddDataSetForm
 from django.core import serializers
 
 # Create your views here.
@@ -23,7 +23,10 @@ def get_recent_data_sets(request, page):
 # views
 @login_required
 def index(request):
-	return render(request, 'main/index.html', {})
+
+	params = {}
+
+	return render(request, 'main/index.html', params)
 
 def logout_view(request):
 	if request.user.is_authenticated():
