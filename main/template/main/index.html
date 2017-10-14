@@ -50,6 +50,7 @@
 					loadData();
 				}
 			});
+		 	$('.modal').modal();
 		});
 
 	</script>
@@ -72,6 +73,22 @@
 						</div>
 					</a>
 				</center>
+				<div id="addModal" class="modal">
+					<form method="POST" action="">
+						<div class="modal-content">
+							<h4>Add Dataset</h4>
+							{% for field in form %}
+								<div class="input-field col s12 m6">
+									{{ field }}
+									<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+								</div>
+							{% endfor %}
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 		<div class="row" id="posts">

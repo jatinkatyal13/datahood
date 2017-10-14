@@ -24,7 +24,16 @@ def get_recent_data_sets(request, page):
 @login_required
 def index(request):
 
-	params = {}
+	if request.method == "POST":
+		form = AddDataSetForm(request.POST)
+		if form.is_valid():
+			form.save()
+	else:
+		form = AddDataSetForm()
+
+	params = {
+		'form' : form
+	}
 
 	return render(request, 'main/index.html', params)
 
