@@ -24,6 +24,10 @@ def get_recent_data_sets(request, page):
 @login_required
 def index(request):
 
+	request.POST = request.POST.copy()
+
+	request.POST['user'] = request.user.id
+
 	if request.method == "POST":
 		form = AddDataSetForm(request.POST)
 		if form.is_valid():

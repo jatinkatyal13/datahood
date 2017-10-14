@@ -8,4 +8,7 @@ class LoginForm(forms.Form):
 class AddDataSetForm(forms.ModelForm):
 	class Meta:
 		model = DataSet
-		fields = ['user', 'title', 'description', 'file']
+		fields = ['title', 'description', 'file']
+		widgets = {
+			'description' : forms.TextInput(attrs = {'class' : 'materialize-textarea'})
+		}
