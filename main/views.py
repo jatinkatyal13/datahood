@@ -4,14 +4,35 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from .models import DataSet
 from .forms import LoginForm
+from django.core import serializers
 
 # Create your views here.
 
+# APIs
+@login_required
+def get_recent_data_sets(request, page):
+
+	MAX_ON_PAGE = 7
+
+	page = int(page)
+
+	data = DataSet.objects.all()[page*MAX_ON_PAGE:page*MAX_ON_PAGE + MAX_ON_PAGE]
+
+	return HttpResponse(serializers.serialize("json", data))
+
+# views
 @login_required
 def index(request):
 	return render(request, 'main/index.html', {})
 
-def login(request):
+def logout_view(request):
+	if request.user.is_authenticated():
+		logout(request)
+		return HttpResponseRedirect('/login')
+	else:
+		raise Http404()
+
+def login_view(request):
 
 	if request.user.is_authenticated():
 		return HttpResponseRedirect('/')

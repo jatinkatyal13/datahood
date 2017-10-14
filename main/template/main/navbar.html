@@ -1,15 +1,15 @@
 <nav>
 	<div class="nav-wrapper">
-		<a href="/" class="brand-logo">RobinHood</a>
+		<a href="/" class="brand-logo">Data Hood</a>
 		<a href="#" data-activates="mobile" class="button-collapse"><i class="material-icons">menu</i></a>
 		<ul id="nav-mobile" class="right hide-on-med-and-down">
 			<li>Hello, {{ request.user.first_name }}</li>
-			<li><a href="">Logout</a></li>
+			<li><a href="{% url 'logout' %}">Logout</a></li>
 		</ul>
 		<ul id="mobile" class="side-nav">
 			<li><a href="">Hello, {{ request.user.first_name }}</a></li>
 			<li class="divider"></li>
-			<li><a href="">Logout</a></li>
+			<li><a href="{% url 'logout' %}">Logout</a></li>
 		</ul>
 	</div>
 </nav>
